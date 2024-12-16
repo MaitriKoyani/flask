@@ -1,14 +1,16 @@
 from flask import Flask,render_template,request,make_response,session
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from flask_login import login_manager,LoginManager,login_user
-
+from flask_login import login_manager,LoginManager
+from sqlalchemy import text
 
 app= Flask(__name__)
 bcry= Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///datastore.db"
 app.config["SECRET_KEY"] = "end"
 db=SQLAlchemy(app)
+
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -18,8 +20,12 @@ class Detail(db.Model):
     username=db.Column(db.String(60),unique=True)
     email=db.Column(db.String,unique=True)
     password=db.Column(db.String(255),nullable=False)
-    active = db.Column(db.Boolean())
+    
 with app.app_context():
+    db.session.execute(text('DROP TABLE IF EXISTS data1;'))
+    db.session.commit()
+    print("Table deleted successfully.")
+
     db.create_all()
 
 @login_manager.user_loader
@@ -45,7 +51,7 @@ def register():
         if user:
             msg='User is already registered'
             return render_template('index.html',msg=msg,username=user.username)
-        user=Detail(username=request.form['username'],email=request.form['email'],password=bcry.generate_password_hash(request.form['password']).decode('utf-8'),active=1)
+        user=Detail(username=request.form['username'],email=request.form['email'],password=bcry.generate_password_hash(request.form['password']).decode('utf-8'))
         db.session.add(user)
         db.session.commit()
         
@@ -85,11 +91,11 @@ def logout(id):
     user = db.get_or_404(Detail, id)
     msg=''
     if request.method == "POST":
-        db.session.delete(user)
+        
         session[user.username] = None
-        #session.pop('username', None)
-        db.session.commit()
-        msg='This user '+user.username+' deleted!'
+        session.pop('username', None)
+        
+        msg='This user '+user.username+' is logout!'
         return render_template('index.html',msg=msg)
 
     return render_template("logout.html", msg=msg,username='none')
