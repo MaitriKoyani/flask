@@ -22,9 +22,9 @@ class Detail(db.Model):
     password=db.Column(db.String(255),nullable=False)
     
 with app.app_context():
-    db.session.execute(text('DROP TABLE IF EXISTS data1;'))
-    db.session.commit()
-    print("Table deleted successfully.")
+    # db.session.execute(text('DROP TABLE IF EXISTS data1;'))
+    # db.session.commit()
+    # print("Table deleted successfully.")
 
     db.create_all()
 
@@ -46,18 +46,35 @@ def index():
 def register():
     msg=''
     if request.method == 'POST':
-        user=Detail.query.filter_by(email=request.form['email']).first()
-        
-        if user:
-            msg='User is already registered'
-            return render_template('index.html',msg=msg,username=user.username)
-        user=Detail(username=request.form['username'],email=request.form['email'],password=bcry.generate_password_hash(request.form['password']).decode('utf-8'))
-        db.session.add(user)
-        db.session.commit()
-        
-        msg=' registration successful'
-        
-        return render_template('welcome.html',username=user.username,msg=msg)
+        user=Detail.query.filter_by(username=request.form['username']).first()
+        email=Detail.query.filter_by(email=request.form['email']).first()
+        if user and email:
+            if user.username==email.username:
+                if user.password==request.form['password']:
+                    msg=' is already registered , please login!'
+                    return render_template('welcome.html',msg=msg,username=user.username)
+                else:
+                    msg='Password is wrong but user exists so please login!'
+                    return render_template('register.html',msg=msg)
+            else:
+                msg='Please change your username and email both are exists!'
+                return render_template('register.html',msg=msg)
+        elif user:
+            if user.email!=request.form['email']:
+                msg='Username already exists , please change your username!'
+                return render_template('register.html',msg=msg)
+        elif email:
+            if email.username!=request.form['username']:
+                msg='Email already exists , please change your Email!'
+                return render_template('register.html',msg=msg)
+        else:
+            user=Detail(username=request.form['username'],email=request.form['email'],password=bcry.generate_password_hash(request.form['password']).decode('utf-8'))
+            db.session.add(user)
+            db.session.commit()
+            
+            msg=' registration successful'
+            
+            return render_template('welcome.html',username=user.username,msg=msg)
     else:
         return render_template('register.html',msg=msg)
 
