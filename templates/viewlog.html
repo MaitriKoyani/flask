@@ -1,0 +1,58 @@
+{% extends "index.html" %}
+
+{% block maintitle %}
+
+    Viewlog
+        
+{% endblock %}
+
+{% block title %}
+
+    <!-- add title -->
+    Welcome {{username}}!
+        
+{% endblock %}
+
+{% block body %}
+    <!-- add body -->
+    {% if coun>0 %}
+        <table class="table table-secondary table-striped m-3">
+            <thead>
+                <tr>
+                    <th scope="col">S.no.</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time In</th>
+                    <th scope="col">Time Out</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Total Hours</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for l in log %}
+                     
+                    <tr>
+                        <th scope="row">{{l.id}}</th>
+                        <td>{{l.date}}</td>
+                        <td>{{l.timein}}</td>
+                        <td>{{l.timeout}}</td> 
+                        <td>{{l.task}}</td>
+                        <td>{{l.description}}</td>
+                        <td>{{l.hours}}</td>
+                        
+                        <td><a href="/updatelog/{{l.id}}" class="btn btn-outline-secondary" >Update</a></td>
+                        <td><a href="/deletelog/{{l.id}}" class="btn btn-outline-secondary" >Delete</a></td>
+                    </tr>
+                    
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h3>There is no log , Please add logs!</h3>
+    {% endif %}
+    <a href="/" class="btn text-dark fw-bold position-absolute top-0 start-0">-> back</a>
+{% endblock %}
+
+        

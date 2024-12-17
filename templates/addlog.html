@@ -1,0 +1,53 @@
+{% extends "index.html" %}
+
+{% block maintitle %}
+
+    Addlog
+        
+{% endblock %}
+
+{% block title %}
+
+    <!-- add title -->
+    Welcome {{username}}!
+        
+{% endblock %}
+
+{% block body %}
+
+    <!-- add body -->
+    <form class="row g-3 fs-5 m-3 text-start" method="POST">
+        <div class="fw-bold top-0">{{msg}}</div>
+        <div class="col-12">
+            <label class="form-label ps-2">Date</label>
+            <input type="date" class="form-control" id="inputdate" name="date" value="{{l.date}}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label ps-2">Time In</label>
+          <input type="time" class="form-control" id="inputtin" name="timein" value="{{l.timein}}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label ps-2">Time Out</label>
+          <input type="time" class="form-control" id="inputtout" name="timeout" value="{{l.timeout}}">
+        </div>
+        <div class="col-12">
+          <label class="form-label ps-2">Task</label>
+          <input type="text" class="form-control" id="inputtask" name="task" value="{{l.task}}">
+        </div>
+        <div class="col-12">
+            <label class="form-label ps-2">Description</label>
+            <input type="text" class="form-control" id="inputdis" name="description" value="{{l.description}}" >
+        </div>
+        <div class="col-12">
+            <label class="form-label ps-2">Total Hours</label>
+            <input type="number" class="form-control" id="inputhour" name="hours" value="{{l.hours}}">
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    <a href="/" class="btn text-dark fw-bold mb-3 position-absolute top-0 start-0">-> back</a>
+{% endblock %}
+    
+
+        
